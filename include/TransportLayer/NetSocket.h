@@ -40,6 +40,16 @@ private:
   FD m_fd;
 };
 
+class NetSocketException : public std::exception {
+public:
+  NetSocketException(int);
+  virtual const char* what() const noexcept override ;
+
+private:
+  int m_errno;
+  char m_errstr[MAX_SIZE];
+};
+
 class SocketAddressV4 {
 public:
   SocketAddressV4(in_port_t port, uint32_t ip) {
@@ -70,13 +80,4 @@ private:
   struct sockaddr_in m_addr;
 };
 
-class NetSocketException : public std::exception {
-public:
-  NetSocketException(int);
-  virtual const char* what() const noexcept override ;
-
-private:
-  int m_errno;
-  char m_errstr[MAX_SIZE];
-};
 #endif /* NET_SOCKET_H */
