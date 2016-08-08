@@ -34,7 +34,6 @@ public:
 
 public:
   NetSocket(DOMAIN, TYPE, PROTOCOL);
-  virtual ~NetSocket();
 
 private:
   FD m_fd;
