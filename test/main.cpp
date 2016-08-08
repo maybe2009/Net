@@ -2,3 +2,31 @@
 // Created by DW on 2016/8/8.
 //
 
+#include "NetSocket.h"
+
+#include <fcntl.h>
+
+#include <iostream>
+#include <string>
+
+int main() {
+  try {
+    SocketAddressV4 address(1234, std::string("127.0.0.1"));
+    NetSocket socket0(AF_INET, SOCK_STREAM, 0);
+    socket0.Bind((const ADDR*)address.Get(), address.Size());
+    std::cout << "Listening..." << std::endl;
+    socket0.Listen(5);
+
+    if ( FD client_fd = socket0.Accept(NULL, NULL)) {
+      std::cout << "New fd " << client_fd << endl;
+      close(client_fd);
+    } else {
+      std::cout << "Accept Error " << client_fd << endl;
+    }
+  }
+  catch (NetSocketException& e) {
+    std::cout << e.what() << endl;
+  }
+
+  return 0;
+}

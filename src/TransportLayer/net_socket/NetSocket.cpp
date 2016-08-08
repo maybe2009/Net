@@ -8,7 +8,7 @@
  * how-to-get-posix-strerror-r-instead-of-gnu-version
  */
 
-NetSocket::NetSocket(int family, int type, int protocol) {
+NetSocket::NetSocket(DOMAIN family, TYPE type, PROTOCOL protocol) {
   CreateSocket(family, type, protocol);
 }
 

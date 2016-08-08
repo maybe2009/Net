@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(Net)
 
-set(SOURCE_FILES main.cpp)
-add_executable(mytest ${SOURCE_FILES})
+set(SERVER_SOURCE main.cpp)
+set(CLIENT_SOURCE client.cpp)
+add_executable(myserver ${SERVER_SOURCE})
+add_executable(myclient ${CLIENT_SOURCE})
 target_link_libraries(NetSocket)
