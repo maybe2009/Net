@@ -18,14 +18,14 @@ int main() {
     socket0.Listen(5);
 
     if ( FD client_fd = socket0.Accept(NULL, NULL)) {
-      std::cout << "New fd " << client_fd << endl;
+      std::cout << "New fd " << client_fd << std::endl;
       close(client_fd);
     } else {
-      std::cout << "Accept Error " << client_fd << endl;
+      std::cout << "Accept Error " << client_fd << std::endl;
     }
   }
   catch (NetSocketException& e) {
-    std::cout << e.what() << endl;
+    std::cout << e.what() << std::endl;
   }
 
   return 0;

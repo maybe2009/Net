@@ -14,13 +14,13 @@ int main() {
     NetSocket socket0(AF_INET, SOCK_STREAM, 0);
 
     if (socket0.Connect((const ADDR*)address.Get(), address.Size()) == 0) {
-      std::cout << "Connect Success "  << endl;
+      std::cout << "Connect Success "  << std::endl;
     } else {
-      std::cout << "Connect Error " << endl;
+      std::cout << "Connect Error " << std::endl;
     }
   }
   catch (NetSocketException& e) {
-    std::cout << e.what() << endl;
+    std::cout << e.what() << std::endl;
   }
 
   return 0;
