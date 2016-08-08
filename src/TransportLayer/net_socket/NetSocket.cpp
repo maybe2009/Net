@@ -1,37 +1,55 @@
-#include "NetSocket.h"
+#include "../../../include/TransportLayer/NetSocket.h"
 
-#include <sys/socket.h>
+/* put this after all the #include, so we get the POSIX version strerror_r*/
+#ifdef _GNU_SOURCE
+#undef _GNU_SOURCE
+#endif
+/* DON'T put any #include below. see http://stackoverflow.com/questions/3052041/
+ * how-to-get-posix-strerror-r-instead-of-gnu-version
+ */
 
 NetSocket::NetSocket(int family, int type, int protocol) {
-  m_fd = ::socket(family, type , protocol);
-  if (m_fd == -1) {
-    throw; 
-  } 
+  CreateSocket(family, type, protocol);
 }
 
 void
-NetSocket::Bind(SOCK_ADDR_TYPE* addr, SOCK_LEN_TYPE len) {
-  if (::bind(m_fd, addr, len) != 0) {
-    throw; 
+NetSocket::CreateSocket(DOMAIN family, TYPE fd, PROTOCOL protocol) {
+  m_fd = ::socket(family, type, protocol);
+  if (m_fd == -1) {
+    throw NetSocketException(errno);
   }
 }
 
-int 
-NetSocket::Connect(SOCK_ADDR_TYPE* addr, SOCK_LEN_TYPE len) {
-  if (::connect(m_fd, addr, len) != 0) {
-    return -1; 
-  } else {
-    return 0;
-  } 
+void
+NetSocket::Bind(const ADDR *addr, SOCK_LEN_TYPE len) {
+  if (::bind(m_fd, addr, len) != 0) {
+    throw NetSocketException(errno);
+  }
+}
+
+void
+NetSocket::Listen(int backlog) {
+  if (::listen(m_fd, backllog) != 0) {
+    throw NetSocketException(errno);
+  }
 }
 
 int
-NetSocket::Accept(SOCK_ADDR_TYPE* peer_addr, SOCK_LEN_TYPE* len) {
-  FD_TYPE new_fd = ::accept(m_fd, peer_addr, len);
-  
-  if (new_fd == -1) {
-    throw; 
-  } 
-  
-  return new_fd; 
+NetSocket::Connect(const ADDR *addr, SOCK_LEN_TYPE len) {
+  return ::connect(m_fd, addr, len);
+}
+
+int
+NetSocket::Accept(ADDR *peer_addr, SOCK_LEN_TYPE *len) {
+  return ::accept(m_fd, peer_addr, len);
+}
+
+NetSocketException::NetSocketException(int errno)
+    :m_errno(errno) {
+  //if strerror_r return, there is nothing can be done
+  strerror_r(m_errno, m_errstr, MAX_SIZE);
+}
+
+const char *NetSocketException::what() const {
+  return m_errstr;
 }
