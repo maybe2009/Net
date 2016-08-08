@@ -6,5 +6,5 @@ link_directories(
 )
 set(SERVER_SOURCE main.cpp)
 add_executable(myserver ${SERVER_SOURCE})
-target_link_libraries(NetSocket)
+target_link_libraries(myserver NetSocket)
 

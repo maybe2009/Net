@@ -3,4 +3,4 @@ project(Net)
 
 set(CLIENT_SOURCE client.cpp)
 add_executable(myclient ${CLIENT_SOURCE})
-target_link_libraries(NetSocket)
+target_link_libraries(myclient NetSocket)
