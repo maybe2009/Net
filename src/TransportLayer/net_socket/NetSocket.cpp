@@ -50,6 +50,6 @@ NetSocketException::NetSocketException(int v)
   strerror_r(m_errno, m_errstr, MAX_SIZE);
 }
 
-const char *NetSocketException::what() const {
+const char *NetSocketException::what() const noexcept {
   return m_errstr;
 }
