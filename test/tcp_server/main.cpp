@@ -20,6 +20,5 @@ int main() {
   catch (NetSocketException& e) {
     std::cout << e.what() << std::endl;
   }
-
   return 0;
 }
