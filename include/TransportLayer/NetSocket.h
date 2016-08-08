@@ -40,8 +40,8 @@ private:
 
 class NetSocketException : public std::exception {
 public:
-  NetSocketException(int errno);
-  virtual const char* what() const override ;
+  NetSocketException(int);
+  virtual const char* what() const noexcept override ;
 
 private:
   int m_errno;
