@@ -6,9 +6,14 @@
 
 #include <iostream>
 
-int main() {
+int main(int argc, char* argv[]) {
+  if (argc < 3) {
+    std::cout << "argc < 2" << std::endl;
+    return -1;
+  }
+
   try {
-    SocketAddressV4 address(1234, std::string("127.0.0.1"));
+    SocketAddressV4 address(1234, std::string(argv[1]));
     NetSocket socket0(AF_INET, SOCK_STREAM, 0);
 
     if (socket0.Connect((const ADDR*)address.Get(), address.Size()) == 0) {
