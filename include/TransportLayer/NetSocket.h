@@ -41,8 +41,8 @@ private:
 
 class NetSocketException : public std::exception {
 public:
-  NetSocketException(int);
-  NetSocketException(std::string&);
+  explicit NetSocketException(int);
+  explicit NetSocketException(std::string&);
   virtual const char* what() const noexcept override ;
 
 private:

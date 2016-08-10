@@ -52,7 +52,7 @@ NetSocket::Accept(ADDR *peer_addr, SOCK_LEN_TYPE *len) {
   return ret;
 }
 
-explicit NetSocketException::NetSocketException(int v)
+NetSocketException::NetSocketException(int v)
     :m_errno(v) {
   //if strerror_r return, there is nothing can be done
   strerror_r(m_errno, m_errstr_buf, MAX_SIZE);
@@ -61,7 +61,7 @@ explicit NetSocketException::NetSocketException(int v)
   m_errstr = m_errstr_buf;
 }
 
-explicit NetSocketException::NetSocketException(std::string& str){
+NetSocketException::NetSocketException(std::string& str){
   m_errstr = str;
 }
 
