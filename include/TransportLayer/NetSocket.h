@@ -58,6 +58,12 @@ public:
     m_addr.sin_port = port;
     m_addr.sin_addr.s_addr = ip;
     m_addr.sin_family = AF_INET;
+
+    char buf[INET_ADDRSTRLEN];
+    if (inet_ntop(AF_INET, &(m_addr.sin_addr), buf,INET_ADDRSTRLEN) == nullptr) {
+      throw NetSocketException(errno);
+    }
+    m_ip = buf;
   }
 
   SocketAddressV4(in_port_t port, std::string ip)
