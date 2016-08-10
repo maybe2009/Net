@@ -60,7 +60,8 @@ public:
     m_addr.sin_family = AF_INET;
   }
 
-  SocketAddressV4(in_port_t port, std::string ip) {
+  SocketAddressV4(in_port_t port, std::string ip)
+    :m_ip(ip) {
     memset(&m_addr, 0, Size());
     m_addr.sin_port = port;
     m_addr.sin_family = AF_INET;
@@ -83,8 +84,17 @@ public:
     return &m_addr;
   }
 
+  std::string Ip() const {
+    return m_ip;
+  }
+
+  in_port_t Port() const {
+    return m_addr.sin_port;
+  }
+
 private:
   struct sockaddr_in m_addr;
+  std::string m_ip;
 };
 
 #endif /* NET_SOCKET_H */
