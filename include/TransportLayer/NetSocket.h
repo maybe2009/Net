@@ -42,11 +42,13 @@ private:
 class NetSocketException : public std::exception {
 public:
   NetSocketException(int);
+  NetSocketException(std::string&);
   virtual const char* what() const noexcept override ;
 
 private:
   int m_errno;
-  char m_errstr[MAX_SIZE];
+  char m_errstr_buf[MAX_SIZE + 1];
+  std::string m_errstr;
 };
 
 class SocketAddressV4 {
@@ -63,7 +65,12 @@ public:
     m_addr.sin_port = port;
     m_addr.sin_family = AF_INET;
     if (inet_pton(AF_INET, ip.c_str(), &(m_addr.sin_addr)) != 1) {
-      throw NetSocketException(errno);
+      if (errno != 0) {
+        throw NetSocketException(errno);
+      } else {
+        throw NetSocketException(std::string("inet_pton: ip is not a valid "
+                                                 "network address"));
+      }
     }
   }
 

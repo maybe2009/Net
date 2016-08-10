@@ -47,9 +47,16 @@ NetSocket::Accept(ADDR *peer_addr, SOCK_LEN_TYPE *len) {
 NetSocketException::NetSocketException(int v)
     :m_errno(v) {
   //if strerror_r return, there is nothing can be done
-  strerror_r(m_errno, m_errstr, MAX_SIZE);
+  strerror_r(m_errno, m_errstr_buf, MAX_SIZE);
+  //for safety, ensure m_errstr_buf has at least one null-terminator
+  m_errstr_buf[MAX_SIZE] = 0;
+  m_errstr = m_errstr_buf;
+}
+
+NetSocketException::NetSocketException(std::string& str){
+  m_errstr = str;
 }
 
 const char *NetSocketException::what() const noexcept {
-  return m_errstr;
+  return m_errstr.c_str();
 }
