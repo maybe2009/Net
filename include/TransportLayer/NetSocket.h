@@ -68,8 +68,9 @@ public:
       if (errno != 0) {
         throw NetSocketException(errno);
       } else {
-        throw NetSocketException(std::string("inet_pton: ip is not a valid "
-                                                 "network address"));
+        std::string str("inet_pton: ip is not a valid "
+                        "network address");
+        throw NetSocketException(str);
       }
     }
   }
