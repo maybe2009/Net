@@ -36,15 +36,23 @@ NetSocket::Listen(int backlog) {
 
 int
 NetSocket::Connect(const ADDR *addr, SOCK_LEN_TYPE len) {
-  return ::connect(m_fd, addr, len);
+  int ret = ::connect(m_fd, addr, len);
+  if (ret == -1) {
+    throw NetSocketException(errno);
+  }
+  return ret;
 }
 
 int
 NetSocket::Accept(ADDR *peer_addr, SOCK_LEN_TYPE *len) {
-  return ::accept(m_fd, peer_addr, len);
+  int ret = ::accept(m_fd, peer_addr, len);
+  if (ret == -1) {
+    throw NetSocketException(errno);
+  }
+  return ret;
 }
 
-NetSocketException::NetSocketException(int v)
+explicit NetSocketException::NetSocketException(int v)
     :m_errno(v) {
   //if strerror_r return, there is nothing can be done
   strerror_r(m_errno, m_errstr_buf, MAX_SIZE);
@@ -53,7 +61,7 @@ NetSocketException::NetSocketException(int v)
   m_errstr = m_errstr_buf;
 }
 
-NetSocketException::NetSocketException(std::string& str){
+explicit NetSocketException::NetSocketException(std::string& str){
   m_errstr = str;
 }
 
