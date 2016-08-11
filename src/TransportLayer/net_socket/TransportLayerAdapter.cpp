@@ -2,6 +2,7 @@
 // Created by DW on 2016/8/10.
 //
 #include "TransportLayerAdapter.h"
+#include <netinet/in.h>
 
 TransportLayerAdapter::TransportLayerAdapter(
     in_port_t port,
@@ -27,7 +28,7 @@ TransportLayerAdapter::TransportLayerAdapter(
 ssize_t
 TransportLayerAdapter::Write(std::string& data) {
   try {
-    return m_connection.Write(data.c_ctr(), data.size());
+    return m_connection.Write(data.c_str(), data.size());
   } catch (NetSocketException& e) {
     HandleWriteError(e);
   }

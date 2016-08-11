@@ -6,6 +6,7 @@
 #define NET_TCPADAPTER_H
 
 #include "TransportLayerAdapter.h"
+#include <netinet/in.h>
 
 class TcpAdapter : public  TransportLayerAdapter {
 public:

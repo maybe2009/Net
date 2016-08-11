@@ -48,7 +48,7 @@ NetSocket::Connect(const ADDR *addr, SOCK_LEN_TYPE len) {
 int
 NetSocket::Accept(ADDR *peer_addr, SOCK_LEN_TYPE *len) {
   int new_socket = ::accept(m_fd, peer_addr, len);
-  if (ret == -1) {
+  if (new_socket == -1) {
     throw NetSocketException(errno);
   }
   return new_socket;
