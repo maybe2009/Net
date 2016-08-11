@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
   try {
     TcpAdapter client(1234, std::string(argv[1]), AF_INET);
 
-    client.Connect()
+    client.Connect();
     std::cout << "Connect Success "  << std::endl;
 
     char response[256];
