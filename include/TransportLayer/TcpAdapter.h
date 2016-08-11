@@ -10,8 +10,8 @@
 
 class TcpAdapter : public  TransportLayerAdapter {
 public:
-  TcpAdapter(ip_port_t port, std::string ip, DOMAIN A);
-  TcpAdapter(ip_port_t port, uint32_t ip, DOMAIN a);
+  TcpAdapter(in_port_t port, std::string ip, DOMAIN A);
+  TcpAdapter(in_port_t port, uint32_t ip, DOMAIN a);
 };
 
 #endif //NET_TCPADAPTER_H

@@ -4,7 +4,7 @@
 
 #include "TcpAdapter.h"
 
-TcpAdapter::TcpAdapter(ip_port_t port, std::string ip, DOMAIN domain)
+TcpAdapter::TcpAdapter(in_port_t port, std::string ip, DOMAIN domain)
   : TransportLayerAdapter(port, ip, domain, SOCK_STREAM, 0)
 {
 }
