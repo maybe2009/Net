@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 #include <exception>
 #include <cstring>
@@ -27,10 +28,12 @@ private:
   void CreateSocket(DOMAIN, TYPE, PROTOCOL);
 
 public:
-  void  Bind(const ADDR* addr, SOCK_LEN_TYPE len);
-  void  Listen(int backlog);
-  int   Connect(const ADDR* addr, SOCK_LEN_TYPE len);
-  int   Accept(ADDR*, SOCK_LEN_TYPE*);
+  void      Bind(const ADDR* addr, SOCK_LEN_TYPE len);
+  void      Listen(int backlog);
+  int       Connect(const ADDR* addr, SOCK_LEN_TYPE len);
+  int       Accept(ADDR*, SOCK_LEN_TYPE*);
+  ssize_t   Read(void *buf, size_t count);
+  ssize_t   Write(const void *buf, size_t count);
 
 public:
   NetSocket(DOMAIN, TYPE, PROTOCOL);

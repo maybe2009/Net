@@ -14,7 +14,7 @@ int main() {
     std::cout << "Listening..." << std::endl;
     socket0.Listen(5);
 
-    if ( FD client_fd = socket0.Accept(NULL, NULL)) {
+    if (FD client_fd = socket0.Accept(NULL, NULL)) {
       std::cout << "New fd " << client_fd << std::endl;
       close(client_fd);
     } else {

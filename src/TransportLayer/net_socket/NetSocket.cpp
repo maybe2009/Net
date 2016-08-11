@@ -8,7 +8,9 @@
  * how-to-get-posix-strerror-r-instead-of-gnu-version
  */
 
-NetSocket::NetSocket(DOMAIN family, TYPE type, PROTOCOL protocol) {
+NetSocket::NetSocket(DOMAIN family, TYPE type, PROTOCOL protocol) :
+  m_fd(-1)
+{
   CreateSocket(family, type, protocol);
 }
 
@@ -45,7 +47,25 @@ NetSocket::Connect(const ADDR *addr, SOCK_LEN_TYPE len) {
 
 int
 NetSocket::Accept(ADDR *peer_addr, SOCK_LEN_TYPE *len) {
-  int ret = ::accept(m_fd, peer_addr, len);
+  int new_socket = ::accept(m_fd, peer_addr, len);
+  if (ret == -1) {
+    throw NetSocketException(errno);
+  }
+  return new_socket;
+}
+
+ssize_t
+NetSocket::Read(void *buf, size_t count) {
+  ssize_t ret = ::read(m_fd, buf, count);
+  if (ret == -1) {
+    throw NetSocketException(errno);
+  }
+  return ret;
+}
+
+ssize_t
+NetSocket::Write(const void *buf, size_t count){
+  ssize_t ret = ::write(m_fd, buf, count);
   if (ret == -1) {
     throw NetSocketException(errno);
   }
