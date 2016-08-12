@@ -6,6 +6,7 @@ set(SOURCE_FILES
         TransportLayer/net_socket/NetSocket.cpp
         TransportLayer/net_socket/TransportLayerAdapter.cpp
         TransportLayer/net_socket/TcpAdapter.cpp
+        ApplicationLayer/DNS/DnsAdapter.cpp
         )
 
 add_library(NetSocket ${SOURCE_FILES})

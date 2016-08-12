@@ -12,7 +12,6 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
-
   try {
     TcpAdapter client(1234, std::string(argv[1]), AF_INET);
 

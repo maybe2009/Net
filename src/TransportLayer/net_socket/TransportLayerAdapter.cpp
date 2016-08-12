@@ -78,12 +78,18 @@ void TransportLayerAdapter::Connect() {
     HandleConnectError(e);
   }
 }
-
+///
+/// \param peer_addr pointer of the peer addres structure, Accept will store \
+/// the address of peer connection here.
+/// \param len size of peer_addr
+/// \return new file descriptor which server will use to transfer data with client
 FD TransportLayerAdapter::Accept(ADDR* peer_addr, SOCK_LEN_TYPE* len) {
   try {
     return m_connection.Accept(peer_addr, len);
   } catch (NetSocketException& e) {
     HandleAcceptError(e);
+    //must throw! no useful file descriptor got
+    throw;
   }
 }
 
@@ -91,6 +97,7 @@ void
 TransportLayerAdapter::HandleAcceptError(std::exception& exception) {
   throw;
 }
+
 void
 TransportLayerAdapter::HandleConnectError(std::exception& exception) {
   throw;
