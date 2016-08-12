@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     SocketAddressV4 address(1234, std::string(argv[1]));
     NetSocket socket0(AF_INET, SOCK_STREAM, 0);
 
-    if (socket0.Connect((const ADDR*)address.Get(), address.Size()) == 0) {
+    if (socket0.Connect((const SOCKET_ADDRESS*)address.Get(), address.Size()) == 0) {
       std::cout << "Connect Success "  << std::endl;
     } else {
       std::cout << "Connect Error " << std::endl;

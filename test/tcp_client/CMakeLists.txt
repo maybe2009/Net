@@ -12,3 +12,6 @@ target_link_libraries(test_TcpAdapter NetSocket)
 
 add_executable(test_TcpAdapter2 test_TcpAdapter2.cpp)
 target_link_libraries(test_TcpAdapter2 NetSocket)
+
+add_executable(test_DnsAdapter test_DnsAdapter.cpp)
+target_link_libraries(test_DnsAdapter NetSocket)

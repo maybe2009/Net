@@ -10,21 +10,29 @@
 #include <netdb.h>
 #include <string>
 #include <ws2tcpip.h>
-using  namespace std;
+#include <vector>
+#include <memory>
 
-typedef AI_FLAG int;
+typedef int AI_FLAG;
+
+struct DnsResponse {
+  AI_FLAG flags;
+  std::unique_ptr<SocketAddress> address;
+  std::string canoname;
+};
+
+typedef std::vector<DnsResponse> DnsResponseList;
 
 class DnsAdapter {
   typedef struct addrinfo Meta;
-  typedef NodeName std::string;
-  typedef ServiceName std::string;
+  typedef std::string NodeName;
+  typedef std::string ServiceName;
 public:
   DnsAdapter(DOMIAN, TYPE, PROTOCOL, AI_FLAG);
-  Meta Get(NodeName, ServiceName);
+  DnsResponseList Get(NodeName, ServiceName);
 
 private:
   Meta m_hint;
-  Meta m_response;
 };
 
 #endif //NET_DNSADAPTER_H

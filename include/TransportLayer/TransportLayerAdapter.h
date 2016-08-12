@@ -20,7 +20,7 @@ public:
   void  Bind();
   void  Listen(int backlog);
   void  Connect();
-  FD    Accept(ADDR* peer_addr, SOCK_LEN_TYPE* len);
+  FD    Accept(SOCKET_ADDRESS* peer_addr, SOCK_LEN_TYPE* len);
 
 protected:
   virtual void  HandleBindError(std::exception& );

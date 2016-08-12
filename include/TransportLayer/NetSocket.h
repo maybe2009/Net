@@ -11,6 +11,7 @@
 #include <exception>
 #include <cstring>
 #include <string>
+#include <afxres.h>
 
 #define MAX_SIZE 256
 
@@ -18,9 +19,11 @@ typedef int FD;
 typedef int DOMAIN;
 typedef int TYPE;
 typedef int PROTOCOL;
-typedef struct sockaddr ADDR;
 typedef socklen_t SOCK_LEN_TYPE;
 typedef int FLAG;
+typedef struct sockaddr SOCKET_ADDRESS;
+typedef struct sockaddr_in SOCKET_ADDRESS_V4;
+typedef struct sockaddr_in6 SOCKET_ADDRESS_V6;
 
 class NetSocket
 {
@@ -28,10 +31,10 @@ private:
   void CreateSocket(DOMAIN, TYPE, PROTOCOL);
 
 public:
-  void      Bind(const ADDR* addr, SOCK_LEN_TYPE len);
+  void      Bind(const SOCKET_ADDRESS* addr, SOCK_LEN_TYPE len);
   void      Listen(int backlog);
-  int       Connect(const ADDR* addr, SOCK_LEN_TYPE len);
-  int       Accept(ADDR*, SOCK_LEN_TYPE*);
+  int       Connect(const SOCKET_ADDRESS* addr, SOCK_LEN_TYPE len);
+  int       Accept(SOCKET_ADDRESS*, SOCK_LEN_TYPE*);
   ssize_t   Read(void *buf, size_t count);
   ssize_t   Write(const void *buf, size_t count);
 
@@ -54,7 +57,14 @@ private:
   std::string m_errstr;
 };
 
-class SocketAddressV4 {
+class SocketAddress {
+public:
+  virtual size_t Size() const = 0;
+  virtual std::string Ip() const = 0;
+  virtual in_port_t Port() const = 0;
+};
+
+class SocketAddressV4 : public SocketAddress{
 public:
   SocketAddressV4(in_port_t port, uint32_t ip) {
     memset(&m_addr, 0, Size());
@@ -70,7 +80,8 @@ public:
   }
 
   SocketAddressV4(in_port_t port, std::string ip)
-    :m_ip(ip) {
+    :m_ip(ip)
+  {
     memset(&m_addr, 0, Size());
     m_addr.sin_port = port;
     m_addr.sin_family = AF_INET;
@@ -85,11 +96,16 @@ public:
     }
   }
 
+  SocketAddressV4(const SOCKET_ADDRESS *address) {
+    //TODO: add exeception handle
+    memcpy(&m_addr, address, sizeof(SOCKET_ADDRESS_V4));
+  }
+
   size_t Size() const {
     return sizeof(m_addr);
   }
 
-  const struct sockaddr_in* Get() const {
+  const SOCKET_ADDRESS *Get() const {
     return &m_addr;
   }
 
@@ -102,7 +118,7 @@ public:
   }
 
 private:
-  struct sockaddr_in m_addr;
+  SOCKET_ADDRESS_V4 m_addr;
   std::string m_ip;
 };
 

@@ -10,7 +10,7 @@ int main() {
   try {
     SocketAddressV4 address(1234, std::string("127.0.0.1"));
     NetSocket socket0(AF_INET, SOCK_STREAM, 0);
-    socket0.Bind((const ADDR*)address.Get(), address.Size());
+    socket0.Bind((const SOCKET_ADDRESS*)address.Get(), address.Size());
     std::cout << "Listening..." << std::endl;
     socket0.Listen(5);
 

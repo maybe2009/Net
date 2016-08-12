@@ -23,7 +23,7 @@ NetSocket::CreateSocket(DOMAIN family, TYPE type, PROTOCOL protocol) {
 }
 
 void
-NetSocket::Bind(const ADDR *addr, SOCK_LEN_TYPE len) {
+NetSocket::Bind(const SOCKET_ADDRESS *addr, SOCK_LEN_TYPE len) {
   if (::bind(m_fd, addr, len) != 0) {
     throw NetSocketException(errno);
   }
@@ -37,7 +37,7 @@ NetSocket::Listen(int backlog) {
 }
 
 int
-NetSocket::Connect(const ADDR *addr, SOCK_LEN_TYPE len) {
+NetSocket::Connect(const SOCKET_ADDRESS *addr, SOCK_LEN_TYPE len) {
   int ret = ::connect(m_fd, addr, len);
   if (ret == -1) {
     throw NetSocketException(errno);
@@ -46,7 +46,7 @@ NetSocket::Connect(const ADDR *addr, SOCK_LEN_TYPE len) {
 }
 
 int
-NetSocket::Accept(ADDR *peer_addr, SOCK_LEN_TYPE *len) {
+NetSocket::Accept(SOCKET_ADDRESS *peer_addr, SOCK_LEN_TYPE *len) {
   int new_socket = ::accept(m_fd, peer_addr, len);
   if (new_socket == -1) {
     throw NetSocketException(errno);

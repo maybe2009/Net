@@ -56,7 +56,7 @@ TransportLayerAdapter::Read(void *buf, size_t count) {
 void
 TransportLayerAdapter::Bind() {
   try {
-    m_connection.Bind((const ADDR *) m_address.Get(), m_address.Size());
+    m_connection.Bind((const SOCKET_ADDRESS *) m_address.Get(), m_address.Size());
   } catch (NetSocketException& e) {
     HandleBindError(e);
   }
@@ -73,7 +73,7 @@ TransportLayerAdapter::Listen(int backlog) {
 
 void TransportLayerAdapter::Connect() {
   try {
-    m_connection.Connect((const ADDR *) m_address.Get(), m_address.Size());
+    m_connection.Connect((const SOCKET_ADDRESS *) m_address.Get(), m_address.Size());
   } catch (NetSocketException& e) {
     HandleConnectError(e);
   }
@@ -83,7 +83,7 @@ void TransportLayerAdapter::Connect() {
 /// the address of peer connection here.
 /// \param len size of peer_addr
 /// \return new file descriptor which server will use to transfer data with client
-FD TransportLayerAdapter::Accept(ADDR* peer_addr, SOCK_LEN_TYPE* len) {
+FD TransportLayerAdapter::Accept(SOCKET_ADDRESS* peer_addr, SOCK_LEN_TYPE* len) {
   try {
     return m_connection.Accept(peer_addr, len);
   } catch (NetSocketException& e) {
