@@ -1,5 +1,5 @@
 #include "../../../include/TransportLayer/NetSocket.h"
-
+#include <iostream>
 /* put this after all the #include, so we get the POSIX version strerror_r*/
 #ifdef _GNU_SOURCE
 #undef _GNU_SOURCE
@@ -72,18 +72,10 @@ NetSocket::Write(const void *buf, size_t count){
   return ret;
 }
 
-NetSocketException::NetSocketException(int v)
-    :m_errno(v) {
-  //use GNU version strerror_r
-  m_errstr = strerror_r(m_errno, m_errstr_buf, MAX_SIZE);
-  //for safety, ensure m_errstr_buf has at least one null-terminator
-  m_errstr_buf[MAX_SIZE] = 0;
+int NetSocket::SetSocketOption(int level, int opt, const void *value, SOCK_LEN_TYPE value_len) {
+  return setsockopt(m_fd, level, opt, value, value_len);
 }
 
-NetSocketException::NetSocketException(std::string& str){
-  m_errstr = str;
-}
-
-const char *NetSocketException::what() const noexcept {
-  return m_errstr.c_str();
+FD NetSocket::GetSocket() const {
+  return m_fd;
 }

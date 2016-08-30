@@ -7,6 +7,10 @@ set(SOURCE_FILES
         TransportLayer/net_socket/TransportLayerAdapter.cpp
         TransportLayer/net_socket/TcpAdapter.cpp
         ApplicationLayer/DNS/DnsAdapter.cpp
+        EventDispatcher/EventDispatcher.cpp
+        ../include/EventDispatcher/EventDispatcher.h
+        EventDispatcher/IOMultiplexer.cpp
+        ../include/EventDispatcher/IOMultiplexer.h
         )
 
 add_library(NetSocket ${SOURCE_FILES})

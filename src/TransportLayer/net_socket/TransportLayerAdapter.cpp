@@ -3,6 +3,7 @@
 //
 #include "TransportLayerAdapter.h"
 #include <netinet/in.h>
+#include <iostream>
 
 TransportLayerAdapter::TransportLayerAdapter(
     in_port_t port,
@@ -24,15 +25,9 @@ TransportLayerAdapter::TransportLayerAdapter(
     , m_connection(domain, type, protocol)
 {}
 
-
 ssize_t
 TransportLayerAdapter::Write(std::string& data) {
-  try {
-    return m_connection.Write(data.c_str(), data.size());
-  } catch (NetSocketException& e) {
-    HandleWriteError(e);
-  }
-
+  Write(data.c_str(), data.size());
 }
 
 ssize_t
@@ -94,6 +89,14 @@ FD TransportLayerAdapter::Accept(SOCKET_ADDRESS* peer_addr, SOCK_LEN_TYPE* len) 
 }
 
 void
+TransportLayerAdapter::SetSocketOption(int level, int opt, const void *value, SOCK_LEN_TYPE value_len) {
+  if (m_connection.SetSocketOption(level, opt, value, value_len) == -1 ) {
+    throw NetSocketException(errno);
+  }
+}
+
+
+void
 TransportLayerAdapter::HandleAcceptError(std::exception& exception) {
   throw;
 }
@@ -122,3 +125,4 @@ void
 TransportLayerAdapter::HandleWriteError(std::exception& exception) {
   throw;
 }
+

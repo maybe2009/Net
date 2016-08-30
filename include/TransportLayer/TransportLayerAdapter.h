@@ -22,6 +22,7 @@ public:
   void  Connect();
   FD    Accept(SOCKET_ADDRESS* peer_addr, SOCK_LEN_TYPE* len);
 
+  void  SetSocketOption(int levle, int opt, const void *value, SOCK_LEN_TYPE value_len);
 protected:
   virtual void  HandleBindError(std::exception& );
   virtual void  HandleListenError(std::exception&);

@@ -9,7 +9,6 @@
 
 #include <netdb.h>
 #include <string>
-#include <ws2tcpip.h>
 #include <vector>
 #include <memory>
 
@@ -19,6 +18,21 @@ struct DnsResponse {
   AI_FLAG flags;
   std::unique_ptr<SocketAddress> address;
   std::string canoname;
+  DOMAIN family;
+  DnsResponse() = default;
+
+  DnsResponse(DnsResponse&& rhs) {
+    this->flags = rhs.flags;
+    this->address = std::move(rhs.address);
+    this->canoname = rhs.canoname;
+  }
+
+  DnsResponse& operator=(DnsResponse& rhs) {
+    this->flags = rhs.flags;
+    this->address = std::move(rhs.address);
+    this->canoname = rhs.canoname;
+    return *this;
+  }
 };
 
 typedef std::vector<DnsResponse> DnsResponseList;
@@ -28,7 +42,7 @@ class DnsAdapter {
   typedef std::string NodeName;
   typedef std::string ServiceName;
 public:
-  DnsAdapter(DOMIAN, TYPE, PROTOCOL, AI_FLAG);
+  DnsAdapter(DOMAIN, TYPE, PROTOCOL, AI_FLAG);
   DnsResponseList Get(NodeName, ServiceName);
 
 private:
