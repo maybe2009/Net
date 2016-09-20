@@ -13,18 +13,25 @@
 
 class NetSocketException : public std::exception {
 public:
-  explicit NetSocketException(int v) {
+  explicit NetSocketException(int v)
+      : m_errno(v)
+  {
     //use GNU version strerror_r
     m_errstr = strerror_r(m_errno, m_errstr_buf, MAX_SIZE);
     //for safety, ensure m_errstr_buf has at least one null-terminator
     m_errstr_buf[MAX_SIZE] = 0;
   }
+
   explicit NetSocketException(std::string& str) {
     m_errstr = str;
   }
 
   virtual const char* what() const noexcept override {
     return m_errstr.c_str();
+  }
+
+  int ErrorNumber() const {
+    return m_errno;
   }
 
 private:

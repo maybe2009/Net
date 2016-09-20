@@ -14,6 +14,12 @@ NetSocket::NetSocket(DOMAIN family, TYPE type, PROTOCOL protocol) :
   CreateSocket(family, type, protocol);
 }
 
+NetSocket::NetSocket(FD fd, DOMAIN, TYPE, PROTOCOL)
+    : m_fd(fd)
+{
+
+}
+
 void
 NetSocket::CreateSocket(DOMAIN family, TYPE type, PROTOCOL protocol) {
   m_fd = ::socket(family, type, protocol);
@@ -76,6 +82,10 @@ int NetSocket::SetSocketOption(int level, int opt, const void *value, SOCK_LEN_T
   return setsockopt(m_fd, level, opt, value, value_len);
 }
 
-FD NetSocket::GetSocket() const {
+FD NetSocket::FileDescriptor() const {
   return m_fd;
+}
+
+void NetSocket::Close() {
+  ::close(m_fd);
 }

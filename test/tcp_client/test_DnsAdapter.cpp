@@ -5,6 +5,7 @@
 #include "DnsAdapter.h"
 #include "FixedBuffer.h"
 #include "HttpRequest.h"
+#include "TransportLayerAdapter.h"
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -58,7 +59,9 @@ int main(int argc, char* argv[]) {
       std::cout << "Trying to connect.... " << std::endl;
 
       try {
-        TcpAdapter conn(item.address->Port(), item.address->Ip(), item.address->Family());
+        SocketAddressV4 address(item.address->Port(), item.address->Ip());
+
+        TransportLayerAdapter conn(address);
 
         int on = 1;
         conn.SetSocketOption(IPPROTO_TCP, TCP_NODELAY, (char *)&on, sizeof(int));

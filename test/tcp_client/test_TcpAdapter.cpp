@@ -1,7 +1,7 @@
 //
 // Created by DW on 2016/8/11.
 //
-#include "TcpAdapter.h"
+#include "TransportLayerAdapter.h"
 
 #include <iostream>
 #include <string>
@@ -15,9 +15,10 @@ int main(int argc, char* argv[]) {
   }
 
   try {
-    TcpAdapter server(1234, std::string(argv[1]), AF_INET);
+    SocketAddressV4 address(1234, std::string(argv[1]));
+    TransportLayerAdapter server(address);
     server.Bind();
-    server.Listen(5);
+    server.Listen();
 
     int new_fd;
     std::string greeting = "Hello, client!";

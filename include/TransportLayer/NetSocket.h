@@ -20,6 +20,7 @@ typedef int FD;
 typedef int DOMAIN;
 typedef int TYPE;
 typedef int PROTOCOL;
+typedef in_port_t PORT;
 typedef socklen_t SOCK_LEN_TYPE;
 typedef int FLAG;
 typedef struct sockaddr SOCKET_ADDRESS;
@@ -34,16 +35,19 @@ private:
 public:
   void      Bind(const SOCKET_ADDRESS* addr, SOCK_LEN_TYPE len);
   void      Listen(int backlog);
+  void      Close();
   int       Connect(const SOCKET_ADDRESS* addr, SOCK_LEN_TYPE len);
   int       Accept(SOCKET_ADDRESS*, SOCK_LEN_TYPE*);
   ssize_t   Read(void *buf, size_t count);
   ssize_t   Write(const void *buf, size_t count);
-  FD        GetSocket() const;
-  int       SetSocketOption(int level, int opt, const void* value, SOCK_LEN_TYPE value_len);
+  FD        FileDescriptor() const;
+  int       SetSocketOption(int level, int opt, const void* value,
+                            SOCK_LEN_TYPE value_len);
 
 public:
   NetSocket(DOMAIN, TYPE, PROTOCOL);
 
+  NetSocket(FD fd, DOMAIN, TYPE, PROTOCOL);
 private:
   FD m_fd;
 };
@@ -53,12 +57,16 @@ public:
   virtual size_t Size() const = 0;
   virtual std::string Ip() const = 0;
   virtual in_port_t Port() const = 0;
-  virtual DOMAIN Family() const = 0;
+  virtual DOMAIN Domain() const = 0;
+  virtual TYPE  Type() const = 0;
+  virtual const void * Address() const = 0;
 };
 
 class SocketAddressV4 : public SocketAddress{
 public:
-  SocketAddressV4(in_port_t port, uint32_t ip) {
+  SocketAddressV4(in_port_t port, uint32_t ip, TYPE type = SOCK_STREAM)
+      : m_type(SOCK_STREAM)
+  {
     memset(&m_addr, 0, Size());
     m_addr.sin_port = port;
     m_addr.sin_addr.s_addr = ip;
@@ -71,8 +79,9 @@ public:
     m_ip = buf;
   }
 
-  SocketAddressV4(in_port_t port, std::string ip)
-    :m_ip(ip)
+  SocketAddressV4(in_port_t port, std::string ip, TYPE type = SOCK_STREAM)
+      : m_ip(ip)
+      , m_type(SOCK_STREAM)
   {
     memset(&m_addr, 0, Size());
     m_addr.sin_port = port;
@@ -99,29 +108,34 @@ public:
     m_ip = buf;
   }
 
-  size_t Size() const {
+  size_t Size() const override {
     return sizeof(m_addr);
   }
 
-  const SOCKET_ADDRESS_V4 *Get() const {
+  const void * Address() const override {
     return &m_addr;
   }
 
-  std::string Ip() const {
+  std::string Ip() const override {
     return m_ip;
   }
 
-  in_port_t Port() const {
+  in_port_t Port() const override {
     return m_addr.sin_port;
   }
 
-  DOMAIN Family() const {
+  DOMAIN Domain() const override {
     return m_addr.sin_family;
+  }
+
+  TYPE Type() const override {
+    return m_type;
   }
 
 private:
   SOCKET_ADDRESS_V4 m_addr;
   std::string m_ip;
+  TYPE m_type;
 };
 
 #endif /* NET_SOCKET_H */

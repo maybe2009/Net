@@ -9,24 +9,47 @@
 
 #include <iostream>
 
+void foo() {
+  std::cout << "Say Hello!" << std::endl;
+}
+
 int main () {
-  //set up server sockets
-  SocketAddressV4 address(1234, std::string("127.0.0.1"));
-  NetSocket socket0(AF_INET, SOCK_STREAM, 0);
-  socket0.Bind((const SOCKET_ADDRESS*)address.Get(), address.Size());
-  std::cout << "Listening..." << std::endl;
-  socket0.Listen(5);
+  try {
+    //set up server sockets
+    SocketAddressV4 address(1234, std::string("127.0.0.1"));
+    NetSocket socket0(AF_INET, SOCK_STREAM, 0);
+    socket0.Bind((const SOCKET_ADDRESS *) address.Address(), address.Size());
 
-  IOMultiplexer multiplexer(36);
+    std::cout << "Listening..." << std::endl;
+    socket0.Listen(5);
 
-  std::cout << "Add a event now..." << std::endl;
+    int _socket = socket0.FileDescriptor();
 
-  //create Event and add to IOMultiplexer
-  Event event(socket0.GetSocket(),  EPOLLIN|EPOLLOUT|EPOLLRDHUP );
-  multiplexer.AddEvent(event);
+    std::cout << "Create Event..." << std::endl;
+    LinuxEvent event0(_socket, EPOLLIN | EPOLLOUT | EPOLLRDHUP);
 
-  std::cout << "Dispatch it now..." << std::endl;
-  multiplexer.Dispatch();
+    std::cout << "Creae Subscriber" << std::endl;
+    EventSubscriber subscriber(_socket, READ);
+    MultiplexerCallBack callBack(foo);
+    subscriber.SetCallBack(callBack);
 
-  return 0;
+    std::cout << "Create IOMultiplexer..." << std::endl;
+    Epoll dispatcher;
+    IOMultiplexer multiplexer(dispatcher);
+
+    std::cout << "Add event0 now..." << std::endl;
+    multiplexer.AddEvent(event0);
+
+    std::cout << "Subscribe now..." << std::endl;
+    multiplexer.Subscribe(subscriber);
+
+    std::cout << "Wait now..." << std::endl;
+    multiplexer.Run();
+
+    std::cout << "Over" << std::endl;
+
+    return 0;
+  } catch (std::exception &e) {
+    std::cout << "main catch: " << e.what() << std::endl;
+  }
 }

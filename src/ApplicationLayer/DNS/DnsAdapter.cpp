@@ -53,3 +53,4 @@ DnsAdapter::Get(NodeName node, ServiceName service) {
   freeaddrinfo(result);
   return result_list;
 }
+
